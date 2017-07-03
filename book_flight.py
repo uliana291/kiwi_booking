@@ -30,7 +30,7 @@ def search_for_flights():
         filter_str = ''
     if args.nights_num:
         filter_str += ('&typeFlight=round&daysInDestinationFrom=' + str(args.nights_num) +
-                       '&daysInDestinationTo' + str(args.nights_num))
+                       '&daysInDestinationTo=' + str(args.nights_num))
     else:
         filter_str += '&typeFlight=oneway'
     string_request = ('https://api.skypicker.com/flights?flyFrom=' + args.flyFrom + '&to=' + args.to +
