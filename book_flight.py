@@ -15,8 +15,10 @@ parser.add_argument('--return', type=int, dest='nights_num',
                     help='a flight with passenger staying for N nights in destination')
 parser.add_argument('--cheapest', default=True, action='store_true',
                     help='booking the cheapest flight (default:True')
-parser.add_argument('--shortest', default=False, action='store_true',
-                    help='booking the shortest flight')
+parser.add_argument('--fastest', default=False, action='store_true',
+                    help='booking the fastest flight')
+parser.add_argument('--bags', type=int, dest='bags_count', default=0,
+                    help='booking the fastest flight')
 
 args = parser.parse_args()
 
@@ -24,7 +26,7 @@ args = parser.parse_args()
 def search_for_flights():
     date = args.date[8:10] + '/' + args.date[5:7] + '/' + args.date[0:4]
     date_encoded = urllib.parse.quote_plus(date)
-    if args.shortest:
+    if args.fastest:
         filter_str = '&sort=duration'
     else:
         filter_str = ''
@@ -39,15 +41,16 @@ def search_for_flights():
                       '&partner=picky&partner_market=us' + filter_str)
     data = requests.get(string_request)
 
-    return (data.json()['data'][0]['booking_token'], data.json()['currency'])
+    return data.json()['data'][0]['booking_token'], data.json()['currency']
 
 
 def send_booking_request(tok, curr):
-    d = requests.post("http://37.139.6.125:8080/booking", json={"currency": curr,
+    d = requests.post("http://128.199.48.38:8080/booking", json={"currency": curr,
                                                                 "booking_token": tok,
+                                                                "bags": args.bags_count,
                                                                 "passengers": {
-                                                                    "lastName": "Pearson",
-                                                                    "firstName": "James",
+                                                                    "lastName": "Tom",
+                                                                    "firstName": "Fuller",
                                                                     "title": "Mr",
                                                                     "email": "test@gmail.com",
                                                                     "documentID": "12345678",
