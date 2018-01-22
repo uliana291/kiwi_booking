@@ -24,6 +24,9 @@ args = parser.parse_args()
 
 
 def search_for_flights():
+    """search for available flights with requested criteria provided in args
+    :return: booking token and currency
+    """
     date = args.date[8:10] + '/' + args.date[5:7] + '/' + args.date[0:4]
     date_encoded = urllib.parse.quote_plus(date)
     if args.fastest:
@@ -45,17 +48,24 @@ def search_for_flights():
 
 
 def send_booking_request(tok, curr):
-    d = requests.post("http://128.199.48.38:8080/booking", json={"currency": curr,
-                                                                "booking_token": tok,
-                                                                "bags": args.bags_count,
-                                                                "passengers": {
-                                                                    "lastName": "Tom",
-                                                                    "firstName": "Fuller",
-                                                                    "title": "Mr",
-                                                                    "email": "test@gmail.com",
-                                                                    "documentID": "12345678",
-                                                                    "birthday": "1995-12-12"
-                                                                }})
+    """send booking request with specified token and currency
+    :param tok: booking token
+    :param curr: currency
+    :return: pnr of booking
+    """
+    d = requests.post("http://128.199.48.38:8080/booking", json={
+        "currency": curr,
+        "booking_token": tok,
+        "bags": args.bags_count,
+        "passengers": {
+            "lastName": "Test",
+            "firstName": "Tester",
+            "title": "Mr",
+            "email": "test@gmail.com",
+            "documentID": "12345678",
+            "birthday": "1995-12-12"
+        }
+    })
     return d.json()['pnr']
 
 
